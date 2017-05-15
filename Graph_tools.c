@@ -231,7 +231,7 @@ WGraph Kruskal(WGraph g) {
 
 static void w_graph_write_vec(WGraph g, int src, int sink, int weight, void *data) {
     if (src < sink) {//保证一条边只写一次
-        fprintf((FILE *) data, "%d -- %d [label=\"%d\"]", src, sink, weight);
+        fprintf((FILE *) data, "%d -- %d [label=\"%d\"];\n", src, sink, weight);
     }
 }
 
