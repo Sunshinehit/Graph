@@ -11,6 +11,8 @@
 //tools
 void w_graph_show(WGraph);
 
+void w_graph_show_dot(WGraph, char path[]);
+
 void w_graph_add_edge2(WGraph, int source, int sink, int weight);
 
 //求最短路径部分

@@ -16,12 +16,15 @@ int main(int argc, char **argv) {
     WGraph tree = Kruskal(graph);
     printf("----Source Graph:\n");
     w_graph_show(graph);
+    w_graph_show_dot(graph, "Graph.dot");
     printf("----Kruskal Tree:\n");
     w_graph_show(tree);
+    w_graph_show_dot(tree, "Kruskal.dot");
     w_graph_destroy(tree);
     printf("----Prim Tree:\n");
     tree = Prim(graph, 0);
     w_graph_show(tree);
+    w_graph_show_dot(tree, "Prim.dot");
     w_graph_destroy(tree);
     printf("----The short road:\n");
     Min_len ml = Dijkstra(graph, 0);

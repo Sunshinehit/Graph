@@ -228,3 +228,23 @@ WGraph Kruskal(WGraph g) {
     Heap_delete(heap);
     return res;
 }
+
+static void w_graph_write_vec(WGraph g, int src, int sink, int weight, void *data) {
+    if (src < sink) {//保证一条边只写一次
+        fprintf((FILE *) data, "%d -- %d [label=\"%d\"]", src, sink, weight);
+    }
+}
+
+void w_graph_show_dot(WGraph g, char *path) {
+    int i, vec_num;
+    FILE *file;
+    file = fopen(path, "w");
+    //起笔
+    fprintf(file, "graph prim {\n");
+    vec_num = w_graph_vector_count(g);
+    for (i = 0; i != vec_num; ++i)
+        w_graph_foreach(g, i, w_graph_write_vec, file);
+    //封笔
+    fprintf(file, "}\n");
+    fclose(file);
+}
