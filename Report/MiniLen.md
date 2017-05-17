@@ -11,7 +11,7 @@
 诸如以上问题，我们都可以将其转化为图论中的最短路径问题。
 将以上问题可以抽象为如下情形:
 
-![Graph](./Pics/MiniLenGraph.png)
+![Graph](https://github.com/AlongWY/Graph/raw/master/Report/Pics/MiniLenGraph.png)
 
 将各个位置考虑为图的顶点，而距离或者所用时间则考虑为图的边权。
 则可以利用最短路径算法求解。
@@ -34,7 +34,7 @@
 3. 以k为新考虑的中间点，修改U中各顶点的距离；若从源点v到顶点u的距离（经过顶点k）比原来距离（不经过顶点k）短，则修改顶点u的距离值，修改后的距离值的顶点k的距离加上边上的权。
 4. 重复步骤2和3直到所有顶点都包含在S中。
 
-![例图](./pics/Dijkstra.gif)
+![例图](https://github.com/AlongWY/Graph/raw/master/Report/Pics/Dijkstra.gif)
 
 ## 三·代码实现
 1. 设计数据结构
@@ -60,7 +60,6 @@
     
     
 2. 实现算法
-*
 
 ## 四·实验结果
 ## 五·参考资料
