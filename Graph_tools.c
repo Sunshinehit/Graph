@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <malloc.h>
 #include <stdio.h>
+#include <regex.h>
 //#include "Graph.h"
 #include "WeightGraph.h"
 #include "Graph_tools.h"
@@ -247,4 +248,11 @@ void w_graph_show_dot(WGraph g, char *path) {
     //封笔
     fprintf(file, "}\n");
     fclose(file);
+}
+
+#define BUF_MAX_SIZE (1024)
+
+WGraph w_graph_create_from_file(char *path) {
+    
+    return NULL;
 }
