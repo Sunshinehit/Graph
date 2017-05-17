@@ -1,0 +1,13 @@
+Graph Prim{
+rankdir = LR;
+Beijing -- ShiJiaZhuang [label="10"];
+Beijing -- TaiYuan [label="20"];
+TaiYuan -- Xian [label="30"];
+TaiYuan -- ZhengZhou [label="20"];
+ShiJiaZhuang -- JiNan [label="10"];
+JiNan -- ZhengZhou [label="15"];
+ShiJiaZhuang -- ZhengZhou [label="20"];
+Xian -- Wuhan [label="15"];
+ZhengZhou -- HeFei [label="17"];
+HeFei -- Wuhan [label="10"];
+}
