@@ -41,6 +41,7 @@
 
 ![DataStructure]()
 
+    //无向带权图数据结构
     typedef struct _list {
         int vec;                        //临接顶点
         int weight;                     //权
