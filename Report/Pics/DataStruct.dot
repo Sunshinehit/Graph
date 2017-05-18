@@ -1,0 +1,6 @@
+digraph G {
+edge [fontname="FangSong"];
+node [shape=box, fontname="FangSong" size="20,20"];
+
+
+}

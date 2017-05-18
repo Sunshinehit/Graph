@@ -11,7 +11,23 @@
 诸如以上问题，我们都可以将其转化为图论中的最短路径问题。
 将以上问题可以抽象为如下情形:
 
-![Graph](https://github.com/AlongWY/Graph/raw/master/Report/Pics/MiniLenGraph.png)
+![Graph](https://github.com/AlongWY/Graph/raw/master/Report/Pics/MiniLen.png)
+
+~~~mermaid
+graph LR
+北京 ---|10| 石家庄
+北京 ---|20| 太原
+石家庄 ---|20| 郑州
+石家庄 ---|10| 济南
+济南 ---|15| 郑州
+太原 --- |20| 郑州
+郑州 ---|11| 合肥
+合肥 ---|10| 武汉
+太原 ---|30| 西安
+西安 ---|15| 武汉
+~~~
+
+
 
 将各个位置考虑为图的顶点，而距离或者所用时间则考虑为图的边权。
 则可以利用最短路径算法求解。
@@ -37,15 +53,15 @@
 ## 三·代码实现
 1. 设计数据结构
 
-![DataStructure]()
+![数据结构图]()
 
-```c
+~~~c
 //无向带权图数据结构
 typedef struct _list {
     int vec;                        //临接顶点
     int weight;                     //权
 } link_list;
-    
+
 typedef struct w_graph {
     int n;                          //顶点个数
     int m;                          //边个数
@@ -56,9 +72,8 @@ typedef struct w_graph {
         link_list list[1];          //临接列表
     } *v_list[1];
 } *WGraph;
-```
-    
-    
+~~~
+
 2. 实现算法
 
 ## 四·实验结果
