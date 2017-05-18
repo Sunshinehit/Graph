@@ -1,6 +1,7 @@
 <script type="text/javascript"
            src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-         </script>
+</script>
+
 # Graph
 集合论与图论相关
 
