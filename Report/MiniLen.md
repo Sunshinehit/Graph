@@ -37,6 +37,10 @@
 ## 三·代码实现
 1. 设计数据结构
 ![数据结构图](https://github.com/AlongWY/Graph/raw/master/Report/Pics/DataStruct.png)
+参照了耶鲁大学的一位前辈的代码，使用可变数组（利用malloc和relloc），
+既有了数组的快速，又有了可改变数组大小的能力，在空间效率和时间效率上都有极好的
+效果。
+
 为了代码的简洁，在这里去掉了错误检测。
 ~~~c
 //无向带权图数据结构
@@ -232,4 +236,13 @@ Min_len Dijkstra(WGraph g, int source) {
 可得到下列结果：
 ![Test-MinLen](https://github.com/AlongWY/Graph/raw/master/Report/Pics/Test-MinLen.png)
 
-## 五·参考资料
+## 五·算法分析
+迪杰斯特拉算法的时间复杂度是![n^2](http://latex.codecogs.com/gif.latex?\\%20O(n^2)),
+空间复杂度则取决于数据结构，使用矩阵则为![n^2](http://latex.codecogs.com/gif.latex?\\(n^2)),
+使用邻接表这是一个界。
+
+相对于迪杰斯特拉算法来说，弗洛伊德算法还能处理边权为负值的情况，似乎是更好一些，
+可是为什么大家都用迪杰斯特拉算法呢？
+
+其原因是迪杰斯特拉算法通过斐波那契堆优化后的复杂度为![E+VlgV](http://latex.codecogs.com/gif.latex?\\%20O%28E+Vlg(V)%29)。
+这个时候迪杰斯特拉算法显然更有效率一些。限于时间原因，此处并未优化。
