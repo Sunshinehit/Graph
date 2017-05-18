@@ -41,23 +41,24 @@
 
 ![DataStructure]()
 
-    //无向带权图数据结构
-    typedef struct _list {
-        int vec;                        //临接顶点
-        int weight;                     //权
-    } link_list;
+```c
+//无向带权图数据结构
+typedef struct _list {
+    int vec;                        //临接顶点
+    int weight;                     //权
+} link_list;
     
-    typedef struct w_graph {
-        int n;                          //顶点个数
-        int m;                          //边个数
-        struct successors {
-            int d;                      //临接点个数
-            int len;                    //最大临接点个数
-            char is_sorted;             //
-            link_list list[1];          //临接列表
-        } *v_list[1];
-    } *WGraph;
-    
+typedef struct w_graph {
+    int n;                          //顶点个数
+    int m;                          //边个数
+    struct successors {
+        int d;                      //临接点个数
+        int len;                    //最大临接点个数
+        char is_sorted;             //
+        link_list list[1];          //临接列表
+    } *v_list[1];
+} *WGraph;
+```
     
     
 2. 实现算法
