@@ -11,7 +11,7 @@
 诸如以上问题，我们都可以将其转化为图论中的最短路径问题。
 将以上问题可以抽象为如下情形:
 
-![Graph](https://github.com/AlongWY/Graph/raw/master/Report/Pics/MiniLen.png)
+![Graph](https://raw.githubusercontent.com/AlongWY/Graph/master/Report/Pics/MiniLen.png)
 
 ~~~mermaid
 graph LR
