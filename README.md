@@ -12,21 +12,4 @@
 2. 配置Mermaid
 测试如下
 
-```mermaid
-graph LR
-A-->B
-B-->C
-C-->A
-D-->C
-```
-
-<script src="mermaid.min.js"></script>
-<script>mermaid.initialize({startOnLoad:true});</script>
-
-<div class="mermaid">
-graph LR
-    A --- B
-    B-->C[fa:fa-ban forbidden]
-    B-->D(fa:fa-spinner);
-</div>
-
+配置失败,使用静态图。
