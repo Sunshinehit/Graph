@@ -51,7 +51,7 @@ graph LR
 ## 三·代码实现
 1. 设计数据结构
 
-![数据结构图]()
+![数据结构图](https://github.com/AlongWY/Graph/raw/master/Report/Pics/DataStruct.png)
 
 ~~~c
 //无向带权图数据结构
