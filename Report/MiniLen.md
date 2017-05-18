@@ -226,9 +226,10 @@ Min_len Dijkstra(WGraph g, int source) {
 }
 ~~~
 ## 四·实验结果
-输入下图
-![Test]()
+输入下图：
+![Test](https://github.com/AlongWY/Graph/raw/master/Report/Pics/Test.png)
 
-
+可得到下列结果
+![Test-MinLen](https://github.com/AlongWY/Graph/raw/master/Report/Pics/Test-MinLen.png)
 
 ## 五·参考资料
