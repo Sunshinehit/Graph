@@ -1,6 +1,8 @@
 \documentclass[a4paper,10pt]{ctexart}
 \usepackage[margin=1in]{geometry}
 
+%\usepackage{aicescover} %使用新的封面
+
 %\usepackage{titletoc} %使用此包目录生成Bug
 \usepackage{abstract}
 \usepackage{graphics}
@@ -8,6 +10,8 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{amsthm}
+
+\usepackage{cite}
 
 \usepackage[colorlinks,linkcolor=black,anchorcolor=blue,citecolor=green]{hyperref}
 
@@ -40,17 +44,56 @@
     }
 }
 
-\title{集合论实验报告：最短路径}
-\author{1160300202冯云龙}
-\date{2017年5月}
+%\title{集合论实验报告：最短路径}
+%\author{冯云龙
+%\address{Harbin Institute of Technology}
+%\email{15939423778@163.com}
+%}
 
 \begin{document}
-\maketitle
+%\maketitle
+\begin{titlepage}
+
+\begin{center}
+
+
+% Upper part of the page
+\includegraphics[width=0.8\textwidth]{./HIT.eps}\\[1cm]
+
+\textsc{\LARGE Harbin Institute of Technology}\\[1.5cm]
+
+% Title
+\hrulefill \\[0.4cm]
+{ \huge \bfseries 集合论实验报告：最短路径}\\[0.4cm]
+\hrulefill \\[1.5cm]
+
+% Author and supervisor
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+%悬空
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{作者:}冯云龙 \\
+\emph{学号:}1160300202
+\end{flushright}
+\end{minipage}
+
+\vfill
+
+% Bottom of the page
+{\large \today}
+
+\end{center}
+\end{titlepage}
 
 \part*{摘要}
-生活中的许许多多看似不同的问题在本质上却是相同的，我们对于问题的关注的也往往都是最省时，最省钱...这个时候，通过对图论问题的研究，我们就可以对这些问题做出解答。
-
+生活中的许许多多看似不同的问题在本质上却是相同的，我们对于问题的关注的也往往都是最省时，最省钱...这个时候，通过对图论问题的研究，我们就可以对这些问题做出解答，此报告主要回答关于图论中最短路径的问题。
+\\
 \tableofcontents
+
+\newpage
 \part{正文}
 \section{实验背景}
 
@@ -67,7 +110,7 @@
 例如，上述一个和距离有关的问题，我们就可以将其按如下方式转化：
 取图$G(V,E,W)$，城市所对应的顶点集$(V_0,V_1...V_{n-1}) \in V $，若两个城市$V_i,V_j$邻接，距离为$w$，则有$(V_i,V_j)\in E$，$W(V_i,V_j)=w$。
 
-\includegraphics[width = 5in]{MiniLen.eps}
+\includegraphics[width=0.9\textwidth]{MiniLen.eps}
 
 \section{实验原理}
 \subsection{迪杰斯特拉算法思想}
@@ -91,11 +134,11 @@
 
 \section{代码实现}
 \subsection{设计数据结构}
-参照了耶鲁大学的一位前辈的代码，使用可变数组（利用malloc和relloc），既有了数组的快速，又有了可改变数组大小的能力，在空间效率和时间效率上都有极好的效果。
+参照了耶鲁大学的一位前辈的代码，动态分配数组，长度可以扩展，既不浪费空间，有不会带来性能损失。
 数据结构如下\ref{数据结构如下}：
 
 
-\includegraphics[width=4in]{DataStruct.eps}
+\includegraphics[width=0.9\textwidth]{DataStruct.eps}
 
 \subsection{设计数据操作}
 \begin{enumerate}
@@ -117,37 +160,43 @@
 \end{itemize}
 \begin{codebox}
 \Procname{$\proc{Dijkstra's Algorithm}(G,v_0)$}
-\li \For $v \in \attrib{G}{V}$                          
-    \Do 
-\li     $Dis(v) \gets \attrib{G}{W}(v,v_0)$             
+\li \For $v \in \attrib{G}{V}$
+    \Do
+\li     $Dis(v) \gets \attrib{G}{W}(v,v_0)$
     \End
-\li $Set \  v_0 \in S$                                         
-\li \While $S \ne \attrib{G}{V}$                            
+\li $Set \  v_0 \in S$
+\li \While $S \ne \attrib{G}{V}$
     \Do
 \li     $k \gets \attrib{Dis(V)}{V_m}$
 \li     $Set \  k \in S$
 \li     \For $v \notin S$
         \Do
-\li        \If $Dis(k) + \attrib{G}{W}(k,v) < Dis(v)$ 
+\li        \If $Dis(k) + \attrib{G}{W}(k,v) < Dis(v)$
 \li        \Then $Dis(v) \gets Dis(k) + \attrib{G}{W}(k,v)$
 \li        $Prev(v) = k $
         \End
     \End
 \end{codebox}
 \section{实验结果}
-\begin{itemize}
-  \item 输入\\
-  \includegraphics[width = 4in]{Test.eps}
-  \item 输出\\
-  \includegraphics[width = 4in]{Test-MinLen.eps}
-\end{itemize}
+\subsection{数据输入}
+输入如下无向带权图\\
+\includegraphics[width=0.9\textwidth]{Test.eps}
+\subsection{结果输出}
+通过迪杰斯特拉算法可得到如下结果，既得出距离，又可以显示路径\\
+\includegraphics[width=0.9\textwidth]{Test-MinLen.eps}
 
 \section{实验分析}
-\begin{enumerate}
-  \item  迪杰斯特拉算法的时间复杂度是$O(n^2)$,空间复杂度则取决于数据结构，使用矩阵则为$O(n^2)$。
-  \item 相对于弗洛伊德算法迪杰斯特拉算法来说，迪杰斯特拉算法不能能处理边权为负值的情况。
-  \item 迪杰斯特拉算法通过斐波那契堆优化后的复杂度为$O(E+Vlg(V))$，可显著提高效率，限于时间原因，此处并未优化。
-\end{enumerate}
+\subsection{效率分析}
+迪杰斯特拉算法的时间复杂度是$O(n^2)$,空间复杂度则取决于数据结构，使用矩阵则为$O(n^2)$。
+\subsection{同类算法比较}
+相对于弗洛伊德算法迪杰斯特拉算法来说，迪杰斯特拉算法不能能处理边权为负值的情况。
+\subsection{优化策略}
+\paragraph{权值排序优化策略}
+将要扫描的结点按其对应弧的权值进行顺序排列，每循环一次即可得到符合条件的结点，大大提高了算法的执行效率。
+\paragraph{A*算法优化策略}
+采用改进的Dijkstra算法——A*算法。A*算法是人工智能运用在游戏中的一个重要实践,它主要是解决路径搜索问题。A*算法实际是一种启发式搜索。所谓启发式搜索，就是利用一个估价函数judge（）评估每次决策的价值，决定先尝试哪一种方案。这样可以极大地优化普通的广度优先搜索。从Dijkstra算法到A*算法是判断准则的引入，如果这个判断条件不成立，同样地，只能采用Dijkstra算法。所以A*算法中的估价函数是至关重要。
+\paragraph{扇形优化策略}
+从尽量减少最短路径分析过程中搜索的临时结点数量，限制范围搜索和限定方向搜索考虑进行优化。那么这种有损算法是否可行呢？我们知道，现实生活中行进，不会向着目的地的相反方向行进，否则就是南辕北辙。所以，当所研究的网络可以抽象化为平面网络的条件下，也不必搜索全部结点，可以在以源点到终点所在直线为轴线的扇形区域内搜索最短路径。这样，搜索方向明显地趋向终点，提高了搜索速度，虽然抛弃了部分结点，但基本上不影响搜索的成功率。
 
 \newpage
 \appendix
@@ -190,7 +239,7 @@ WGraph w_graph_create(int n) {
     WGraph g;
     int i;
 
-    g = malloc(sizeof(struct w_graph) + 
+    g = malloc(sizeof(struct w_graph) +
     sizeof(struct successors *) * (n - 1));
     assert(g);
 
@@ -399,7 +448,7 @@ Min_len Dijkstra(WGraph g, int source) {
     assert(source >= 0);
     assert(source < vec_num);
 
-    res = malloc(sizeof(struct min_len) + 
+    res = malloc(sizeof(struct min_len) +
     sizeof(struct list) * (vec_num - 1));
     S = calloc((size_t) vec_num, sizeof(int));
     assert(res);
@@ -442,7 +491,7 @@ Min_len Dijkstra(WGraph g, int source) {
             if ((!S[j]) && w_graph_has_edge(g, u, j)) {
                 if (res->a_list[u].dist + w_graph_weight_edge(g, u, j)
                  < res->a_list[j].dist) {
-                    res->a_list[j].dist = res->a_list[u].dist + 
+                    res->a_list[j].dist = res->a_list[u].dist +
                     w_graph_weight_edge(g, u, j);   //更新距离
                     res->a_list[j].prev = u;        //更新路径
                 }
@@ -453,7 +502,7 @@ Min_len Dijkstra(WGraph g, int source) {
 }
 
 //数据遍历接口
-void min_len_foreach(Min_len m, 
+void min_len_foreach(Min_len m,
 void (*f)(Min_len, int, int, void *), void *data) {
     int i;
     for (i = 0; i != m->n; i++) {
@@ -478,7 +527,7 @@ void w_graph_add_edge2(WGraph g, int source, int sink, int weight) {
 }
 
 //打印数据
-static void w_graph_show_vec(WGraph g, int src, int sink, 
+static void w_graph_show_vec(WGraph g, int src, int sink,
 int weight, void *data) {
     printf(" %d:%d ", sink, weight);
 }
