@@ -134,24 +134,44 @@
 
 \section{代码实现}
 \subsection{设计数据结构}
-参照了耶鲁大学的一位前辈的代码，动态分配数组，长度可以扩展，既不浪费空间，有不会带来性能损失。
+参照了耶鲁大学的一位前辈的代码，动态分配数组，长度可以扩展，既不浪费空间，又不会带来性能损失。
 数据结构如下\ref{数据结构如下}：
-
 
 \includegraphics[width=0.9\textwidth]{../Pics/DataStruct.eps}
 
+结构代码实现如下：
+\begin{lstlisting}[language={C}]
+
+typedef struct _list {
+    int vec;                    //临接顶点
+    int weight;                 //权
+} link_list;
+
+struct w_graph {
+    int n;                      //顶点个数
+    int m;                      //边个数
+    struct successors {
+        int d;                  //临接点个数
+        int len;                //最大临接点个数
+        char is_sorted;         //是否有序
+        link_list list[1];      //临接列表
+    } *v_list[1];               //注意：这是一个指针的数组
+};
+
+typedef struct w_graph *WGraph;//图是一个指针类型的
+\end{lstlisting}
 \subsection{设计数据操作}
-\begin{enumerate}
-  \item 创建一个顶点从$0 \to n-1$的带权图
-  \item 从内存中删去一个图
-  \item 添加边和权
-  \item 返回顶点个数
-  \item 返回边个数
-  \item 返回顶点的度
-  \item 判断是否邻接
-  \item 获取边的权
-  \item 提供读取顶点数据的接口
-\end{enumerate}
+
+\paragraph{创建一个顶点从$0 \to n-1$的带权图}分配初始内存，此时分配内存时多分配$n-1$块$Struct\ Succesors^*$（顶点的邻接列表指针）大小的地址，并对每个指针分配默认大小的内存。
+\paragraph{从内存中删去一个图}遍历释放各顶点邻接列表的内存，再释放图的内存。
+\paragraph{添加边和权}首先确定是否需要对邻接列表的内存进行扩展（使用指数递增的策略扩展），使用$relloc$函数对已经分配的内存进行改变，此时实际上对$link\_list$数组进行了扩容。
+\paragraph{返回顶点个数}返回n。
+\paragraph{返回边个数}返回m。
+\paragraph{返回顶点的度}返回$v\_list[V].d$。
+\paragraph{判断是否邻接}通过该点度的大小来确定是否需要对邻接列表排序，数据量少的时候进行遍历。
+\paragraph{获取边的权}通过该点度的大小来确定是否需要对邻接列表排序，数据量少的时候进行遍历，而后返回权值。
+\paragraph{提供读取顶点数据的接口}接受函数指针$Func$和所需数据指针，内部对邻接列表里的每个顶点施加$Func$操作（将原点，邻接点和权都传给该函数以供操作）。
+
 
 \subsection{实现迪杰斯特拉算法}
 \begin{itemize}
