@@ -1,18 +1,13 @@
-# Graph
-集合论与图论相关
+# 集合论与图论
 
-主要是代码和图论实验报告
+## C语言代码
+代码在Code目录下。
 
-## 配置Markdown
-1. 配置MathJax
-测试如下:
+## 使用LaTex写实验报告
+输出PDF在Report目录下。
+LaTex代码在Report\Latex目录下。
+Latex所需图片在Report\Pics目录下。
 
-![TestMathJax](http://latex.codecogs.com/gif.latex?\\frac{1}{1+sin(x)})
+### 图片使用mermaid和Graphviz制作
 
-2. 配置Mermaid
-测试如下
-
-配置失败,使用静态图。
-
-## 已改用LaTex
-
+### Latex目录下cmd脚本用来删除中间文件

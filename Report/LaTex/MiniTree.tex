@@ -44,12 +44,6 @@
     }
 }
 
-%\title{集合论实验报告：最短路径}
-%\author{冯云龙
-%\address{Harbin Institute of Technology}
-%\email{15939423778@163.com}
-%}
-
 \begin{document}
 %\maketitle
 \begin{titlepage}
@@ -64,7 +58,7 @@
 
 % Title
 \hrulefill \\[0.4cm]
-{ \huge \bfseries 集合论实验报告：最短路径}\\[0.4cm]
+{ \huge \bfseries 集合论实验报告：最小生成树}\\[0.4cm]
 \hrulefill \\[1.5cm]
 
 % Author and supervisor
@@ -89,8 +83,8 @@
 \end{titlepage}
 
 \part*{摘要}
-生活中的许许多多看似不同的问题在本质上却是相同的，我们对于问题的关注的也往往都是最省时，最省钱...这个时候，通过对图论问题的研究，我们就可以对这些问题做出解答，此报告主要回答关于图论中最短路径的问题。
-\\ \paragraph{关键字：}$Dijkstra$\ \ \ \ 最短路径
+生活中的许许多多看似不同的问题在本质上却是相同的，我们往往会遇到求整体最短、最近、最省钱的问题...这个时候，通过对图论问题的研究，我们就可以对这些问题做出解答，此报告主要回答关于图论中最小生成树的问题。
+\\ \paragraph{关键字：}$Prim$\ \ $Kruskal$\ \ 最小生成树
 \tableofcontents
 
 \newpage
@@ -98,45 +92,71 @@
 \section{实验背景}
 
 \subsection{实验目的}
-在实际生活中，我们常常会遇到关注点在于最短、最近、最省钱这些方面的问题，就比如下列问题：
+\paragraph{实际问题} 我们常常会遇到求整体最短、最近、最省钱这些方面的问题，就比如下列问题：
 \begin{itemize}
-\item 一批货从北京到武汉的的最快，或最省钱的走法。
-\item 在城市群中建一个仓储基地，建在什么位置可以让各个城市的送货速度都比较快。
+\item 镇子里要铺设自来水管道，怎么铺用的水管最少，而且家家都能用到水。
+\item 在电路设计中，常常需要把一些电子元件的插脚用电线连接起来。 如果每根电线连接两个插脚，把所有n个插脚连接起来，只要用n-1根电线就可以了。 在所有的连接方案中，我们通常对电线总长度最小的连接方案感兴趣。
+\item 要在n个城市之间铺设光缆，主要目标是要使这 n 个城市的任意两个之间都可以通信， 找出一条使用最短的光纤连通这些城市的铺设方法。
 \end{itemize}
 而像这样的问题，我们都可以通过将其转化为图的问题来解决。
 
 \subsection{实验方法}
 诸如以上问题，我们都可以通过将其转化成图，而后使用求解图的方法解决它。
-例如，上述一个和距离有关的问题，我们就可以将其按如下方式转化：
-取图$G(V,E,W)$，城市所对应的顶点集$(V_0,V_1...V_{n-1}) \in V $，若两个城市$V_i,V_j$邻接，距离为$w$，则有$(V_i,V_j)\in E$，$W(V_i,V_j)=w$。
+例如，上述一个铺设管道的问题，我们就可以将其按如下方式转化：
+取图$G(V,E,W)$，城镇所对应的顶点集$(V_0,V_1...V_{n-1}) \in V $，若两个城镇$V_i,V_j$邻接，距离为$w$，则有$(V_i,V_j)\in E$，$W(V_i,V_j)=w$。
 
-\includegraphics[width=0.9\textwidth]{../Pics/MiniLen.eps}
+\includegraphics[width=0.9\textwidth]{../Pics/MiniTree.eps}
 
 \section{实验原理}
-\subsection{迪杰斯特拉算法思想}
-\begin{itemize}
-\item 设$G=(V,E,W)$是一个带权有向图，把图中顶点集合$V$分成两组:
-    \begin{enumerate}
-    \item 第一组为已求出最短路径的顶点集合（用$S$表示)
-    \item 第二组为其余未确定最短路径的顶点集合（用$U$表示）
-    \end{enumerate}
-\item 初始时$S$中只有一个源点，以后每求得一条最短路径 , 就将加入到集合$S$中，直到全部顶点都加入到$S$中，算法就结束了。
-\item 按最短路径长度的递增次序依次把第二组的顶点加入$S$中。在加入的过程中，总保持从源点$v$到$S$中各顶点的最短路径长度不大于从源点$v$到$U$中任何顶点的最短路径长度。
-\item 此外，每个顶点对应一个距离，$S$中的顶点的距离就是从$v$到此顶点的最短路径长度，$U$中的顶点的距离，是从$v$到此顶点只包括$S$中的顶点为中间顶点的当前最短路径长度。
-\end{itemize}
-\subsection{迪杰斯特拉算法步骤}
+\subsection{$Prim$算法}
+\subsubsection{介绍}
+\paragraph{普里姆算法($Prim$算法)}
+图论中的一种算法，可在加权连通图里搜索最小生成树。\\
+该算法于1930年由捷克数学家沃伊捷赫·亚尔尼克（英语：Vojtěch Jarník）发现；
+并在1957年由美国计算机科学家罗伯特·普里姆（英语：Robert C. Prim）独立发现；
+1959年，艾兹格·迪科斯彻再次发现了该算法。\\
+因此，在某些场合，普里姆算法又被称为DJP算法、亚尔尼克算法或普里姆－亚尔尼克算法。
+
+\subsubsection{算法步骤}
 \begin{enumerate}
-  \item 初始时，$S$只包含源点，即$S＝{v}$，$v-v$的距离为0。$U$包含除$v$外的其他顶点，即:$U=V \setminus S$，若$v$与$U$中顶点$u$有边，则$<u,v>$正常有权值，若u不是$v$的出边邻接点，则$<u,v>$权值为$ \infty $。
-  \item 从$U$中选取一个距离$v$最小的顶点$k$，把$k$，加入$S$中（该选定的距离就是$v$到$k$的最短路径长度）。
-  \item 以$k$为新考虑的中间点，修改$U$中各顶点的距离；若从源点$v$到顶点$u$的距离（经过顶点$k$）比原来距离（不经过顶点$k$）短，则修改顶点u的距离值，修改后的距离值的顶点k的距离加上边上的权。
-  \item 重复步骤2和3直到所有顶点都包含在$S$中。
+  \item 获得$G(V,E,W)$,新建图$G_{new}(V_{new},E_{new},W_{new})$。
+  \item 初始化：$V_{new} = \{x\}$，
+        其中x为集合V中的任一节点（起始点），
+        $E_{new} = \{ \} $；
+  \item 重复下列操作，直到$V_{new} = V$：
+    \begin{enumerate}
+        \item 在集合$E$中选取权值最小的边$<u, v>$，
+        其中$u\in V_{new},v \not\in V_ {new}$（如果存在有多条满足前述条件即具有相同权值的边，则可任意选取其中之一）。
+        \item   将$v$加入集合$V_{new}$中，
+                将$<u,v>$边加入集合$E_{new}$中，
+                将$W<u,v>$加入到$W_{new}$。
+  \end{enumerate}
+  \item 输出：$G_{new}(V_{new},E_{new},W_{new})$。
 \end{enumerate}
+
+\subsection{$Kruskal$算法}
+\subsubsection{介绍}
+\paragraph{$Kruskal$算法}是一种用来寻找最小生成树的算法，由Joseph Kruskal在1956年发表。
+用来解决同样问题的还有Prim算法和Boruvka算法等。
+三种算法都是贪婪算法的应用。
+和Boruvka算法不同的地方是，Kruskal算法在图中存在相同权值的边时也有效。
+\subsubsection{算法步骤}
+\begin{enumerate}
+  \item 获得$G(V,E,W)$，新建图$G_{new}(V_{new},E_{new},W_{new})$，使$V_{new} = V$。
+  \item 将原图$G(V,E,W)$中所有边按权值从小到大排序。
+  \item 重复以下操作，直至图$G_{new}$中所有的节点都在同一个连通分量中。
+      \begin{enumerate}
+       \item 获取$G$中的权值最小的边（若获取过则不再获取）。
+       \item 如果这条边连接的两个节点于图$G_{new}$中且不在同一个连通分量中，则添加这条边到图$G_{new}$中。
+      \end{enumerate}
+  \item 输出：$G_{new}(V_{new},E_{new},W_{new})$。
+\end{enumerate}
+
 
 \section{代码实现}
 \subsection{设计数据结构}
 参照了耶鲁大学的一位前辈的代码，动态分配数组，长度可以扩展，既不浪费空间，有不会带来性能损失。
 数据结构如下\ref{数据结构如下}：
-
 
 \includegraphics[width=0.9\textwidth]{../Pics/DataStruct.eps}
 
@@ -153,50 +173,58 @@
   \item 提供读取顶点数据的接口
 \end{enumerate}
 
-\subsection{实现迪杰斯特拉算法}
+\subsection{实现最小生成树算法}
 \begin{itemize}
-  \item 定义数据结构
-  \item 迪杰斯特拉算法实现\ref{最短路径实现}
-\end{itemize}
+\item $Prim$算法实现\ref{最短路径实现}
 \begin{codebox}
-\Procname{$\proc{Dijkstra's Algorithm}(G,v_0)$}
-\li \For $v \in \attrib{G}{V}$
+\Procname{$\proc{Prim Algorithm}(G,v_0)$}
+\li $v_{new} = v_0,G_{new}(V_{new},E_{new},W_{new})$
+\li \While $V_{new} \ne V$
     \Do
-\li     $Dis(v) \gets \attrib{G}{W}(v,v_0)$
+\li     $Get\ u\in V_{new},v\not\in V_{new}\ Make\ W(u,v)\ min$
+\li     $Set\ v \in V_{new}$,\ $Set\ <u,v>\in E_{new}$,\ $Set\ W(u,v)\in W_{new}$
     \End
+\end{codebox}
+\item $Kruskal$算法实现（实际代码中使用了堆）
+\begin{codebox}
+\Procname{$\proc{Prim Algorithm}(G)$}
+\li $G_{new}(V_{new},E_{new},W_{new}),V_{new}=V$
+\li $Sort\ W$
 \li $Set \  v_0 \in S$
-\li \While $S \ne \attrib{G}{V}$
+\li \While $\exists u,v \in V_{new},Set_u \not= Set_v$
     \Do
-\li     $k \gets \attrib{Dis(V)}{V_m}$
-\li     $Set \  k \in S$
-\li     \For $v \notin S$
+\li     $<u,v> \gets \attrib{Dis(W)}{Min}$
+\li     \If $Set_u \not= Set_v$
         \Do
-\li        \If $Dis(k) + \attrib{G}{W}(k,v) < Dis(v)$
-\li        \Then $Dis(v) \gets Dis(k) + \attrib{G}{W}(k,v)$
-\li        $Prev(v) = k $
+\li        $Set \ W(u,v) \in W_{new}$
+\li        $Merge\ (Set_u,Set_v)$
         \End
     \End
 \end{codebox}
+\end{itemize}
+
 \section{实验结果}
 \subsection{数据输入}
 输入如下无向带权图\\
-\includegraphics[width=0.9\textwidth]{../Pics/Test-MinLen.eps}
+\includegraphics[width=0.9\textwidth]{../Pics/Test-MiniTree.eps}
 \subsection{结果输出}
-通过迪杰斯特拉算法可得到如下结果，既得出距离，又可以显示路径\\
-\includegraphics[width=0.9\textwidth]{../Pics/Test-MinLen-out.eps}
+通过$Prim$算法或$Kruskal$算法可得到如下结果\\
+\includegraphics[height=3in]{../Pics/Test-MiniTree-out.eps}
 
 \section{实验分析}
 \subsection{效率分析}
-迪杰斯特拉算法的时间复杂度是$O(n^2)$,空间复杂度则取决于数据结构，使用矩阵则为$O(n^2)$。
-\subsection{同类算法比较}
-相对于弗洛伊德算法迪杰斯特拉算法来说，迪杰斯特拉算法不能能处理边权为负值的情况。
+\paragraph{$Prim$算法}的时间复杂度取决于数据结构，
+使用矩阵则为$O(v^2)$,邻接表为$O(elog_2v)$。
+\paragraph{$Kruskal$算法}的时间复杂度$O(elog_2e)$。
+
 \subsection{优化策略}
 \paragraph{权值排序优化策略}
 将要扫描的结点按其对应弧的权值进行顺序排列，每循环一次即可得到符合条件的结点，大大提高了算法的执行效率。
-\paragraph{A*算法优化策略}
-采用改进的$Dijkstra$算法——A*算法。A*算法是人工智能运用在游戏中的一个重要实践,它主要是解决路径搜索问题。A*算法实际是一种启发式搜索。所谓启发式搜索，就是利用一个估价函数$judge（）$评估每次决策的价值，决定先尝试哪一种方案。这样可以极大地优化普通的广度优先搜索。从$Dijkstra$算法到A*算法是判断准则的引入，如果这个判断条件不成立，同样地，只能采用$Dijkstra$算法。所以A*算法中的估价函数是至关重要。
-\paragraph{扇形优化策略}
-从尽量减少最短路径分析过程中搜索的临时结点数量，限制范围搜索和限定方向搜索考虑进行优化。那么这种有损算法是否可行呢？我们知道，现实生活中行进，不会向着目的地的相反方向行进，否则就是南辕北辙。所以，当所研究的网络可以抽象化为平面网络的条件下，也不必搜索全部结点，可以在以源点到终点所在直线为轴线的扇形区域内搜索最短路径。这样，搜索方向明显地趋向终点，提高了搜索速度，虽然抛弃了部分结点，但基本上不影响搜索的成功率。
+
+\subsection{算法比较}
+{$Prim$算法}的时间复杂度为$O(v^2)$或者$O(elog_2v)$，只和顶点的数目有关。
+而{$Kruskal$算法}的时间复杂度$O(elog_2e)$，只和边的数目有关。
+由此可见，$Kruskal$算法适用于边稀疏的情形,而$Prim$算法适用于边稠密的情形。
 
 \newpage
 \appendix
@@ -415,8 +443,8 @@ void (*f)(WGraph, int, int, int, void *), void *data) {
     }
 }
 \end{lstlisting}
-\section{最短路径实现}
-\label{最短路径实现}
+\section{最小生成树}
+\label{最小生成树实现}
 \begin{lstlisting}[language={C}]
 //
 // Created by Along on 2017/5/13.
@@ -429,119 +457,113 @@ void (*f)(WGraph, int, int, int, void *), void *data) {
 #include "WeightGraph.h"
 #include "Graph_tools.h"
 
-struct min_len {
-    int n;
-    int vec;
-    struct list {
-        int dist;           //与所要求顶点的距离
-        int prev;           //前驱动点
-    } a_list[1];
+//辅助工具
+//边遍历工具
+struct need_data {
+    int *near;
+    int *Len;
+    int *S;
 };
 
-//迪杰斯特拉算法
-Min_len Dijkstra(WGraph g, int source) {
-    int i, j, *S;
-    Min_len res;
-
-    int vec_num = w_graph_vector_count(g);
-
-    assert(source >= 0);
-    assert(source < vec_num);
-
-    res = malloc(sizeof(struct min_len) +
-    sizeof(struct list) * (vec_num - 1));
-    S = calloc((size_t) vec_num, sizeof(int));
-    assert(res);
-    assert(S);
-
-    res->n = vec_num;
-    res->vec = source;
-
-    //初始化各点
-    for (i = 0; i != vec_num; ++i) {
-        S[i] = 0;
-        if (w_graph_has_edge(g, source, i)) {
-            res->a_list[i].dist = w_graph_weight_edge(g, source, i);
-            res->a_list[i].prev = source;
-        } else {
-            res->a_list[i].prev = -1;
-            res->a_list[i].dist = INFINITY;
+static void update_edge(WGraph g, int src, int sink, int weight, void *data) {
+    assert(g);
+    if (!((struct need_data *) data)->S[sink]) {
+        if (weight < ((struct need_data *) data)->Len[sink]) {
+            ((struct need_data *) data)->Len[sink] = weight;
+            ((struct need_data *) data)->near[sink] = src;
         }
     }
+}
 
-    res->a_list[source].dist = 0;
-    res->a_list[source].prev = source;
-    S[source] = 1;
+WGraph Prim(WGraph g, int start) {
+    int i, j;
+    int vec_num = w_graph_vector_count(g);
+    WGraph res = w_graph_create(vec_num);
+    assert(res);
+    assert(start >= 0);
+    assert(start < vec_num);
+
+    struct need_data Data;
+    Data.S = calloc((size_t) vec_num, sizeof(int));     //逐步增加的新顶点集
+    Data.Len = calloc((size_t) vec_num, sizeof(int));   //到树的最小边
+    Data.near = calloc((size_t) vec_num, sizeof(int));  //最近临接顶点
+    for (i = 0; i != vec_num; ++i)
+        Data.Len[i] = INFINITY;
+    Data.S[start] = 1;
+    Data.Len[start] = 0;
+    int curr = start;
 
     for (i = 1; i != vec_num; ++i) {
-        int min_dst = INFINITY;
-        int u = source;
-        //找出未使用过的点中dist最小的
+        w_graph_foreach(g, curr, update_edge, &Data);   //通过curr更新各边最短值
+        int near_len = INFINITY;
         for (j = 0; j != vec_num; ++j) {
-            if ((!S[j]) && res->a_list[j].dist < min_dst) {
-                u = j;     //u是距离source最近的点
-                min_dst = res->a_list[j].dist;
+            if (!Data.S[j] && Data.Len[j] < near_len) {
+                near_len = Data.Len[j];
+                curr = j;
             }
         }
-
-        S[u] = 1;    //将u标记为已使用
-
-        for (j = 0; j != vec_num; ++j)
-        //j点未被使用且u,j之间有边
-            if ((!S[j]) && w_graph_has_edge(g, u, j)) {
-                if (res->a_list[u].dist + w_graph_weight_edge(g, u, j)
-                 < res->a_list[j].dist) {
-                    res->a_list[j].dist = res->a_list[u].dist +
-                    w_graph_weight_edge(g, u, j);   //更新距离
-                    res->a_list[j].prev = u;        //更新路径
-                }
-            }
+        Data.S[curr] = 1;
+        w_graph_add_edge2(res, curr, Data.near[curr], Data.Len[curr]);
     }
-    free(S);
+    free(Data.near);
+    free(Data.Len);
+    free(Data.S);
     return res;
 }
 
-//数据遍历接口
-void min_len_foreach(Min_len m,
-void (*f)(Min_len, int, int, void *), void *data) {
-    int i;
-    for (i = 0; i != m->n; i++) {
-        f(m, m->a_list[i].dist, m->a_list[i].prev, data);
+
+typedef struct _Edge {
+    int from;
+    int to;
+    int len;
+} Edge;
+
+int edge_cmp(const void *a, const void *b) {
+    return ((Edge *) a)->len - ((Edge *) b)->len;
+}
+
+
+static void insertEdge(WGraph g, int src, int sink, int weight, void *heap) {
+    assert(g);
+    Edge *edge = malloc(sizeof(Edge));
+    edge->from = src;
+    edge->to = sink;
+    edge->len = weight;
+    Heap_insert((BinaryHeap) heap, edge, edge_cmp);
+}
+
+//并查集+堆优化Kruskal算法
+WGraph Kruskal(WGraph g) {
+    int i, SetType;
+    int vec_num = w_graph_vector_count(g);
+    WGraph res = w_graph_create(vec_num);
+    BinaryHeap heap = Heap_create((size_t) w_graph_edge_count(g));
+    int *S = calloc((size_t) vec_num, sizeof(int));
+    assert(S);
+
+    for (i = 0; i != vec_num; ++i) {
+        w_graph_foreach(g, i, insertEdge, heap);
+        S[i] = i;                                       //森林
     }
-}
+    Edge *e = NULL;
 
-//顶点个数
-int min_len_vector_count(Min_len m) {
-    return m->n;
-}
-
-//释放内存
-void min_len_destroy(Min_len m) {
-    free(m);
-}
-
-//封装一次添加二条边
-void w_graph_add_edge2(WGraph g, int source, int sink, int weight) {
-    w_graph_add_edge(g, source, sink, weight);
-    w_graph_add_edge(g, sink, source, weight);
-}
-
-//打印数据
-static void w_graph_show_vec(WGraph g, int src, int sink,
-int weight, void *data) {
-    printf(" %d:%d ", sink, weight);
-}
-
-//调用接口
-void min_len_show(Min_len ml) {
-    int i, j;
-    for (i = 0; i != ml->n; ++i) {
-        printf("Dist:%d ", ml->a_list[i].dist);
-        for (j = i; j != ml->vec; j = ml->a_list[j].prev) {
-            printf("%d <- ", j);
+    while (w_graph_vector_count(res) != (w_graph_edge_count(res) / 2 + 1)) {
+        e = Heap_delete_key(heap, edge_cmp);
+        //如果加入这条边不会形成圈
+        if (S[e->from] != S[e->to]) {
+            //接收此边并合并
+            w_graph_add_edge2(res, e->from, e->to, e->len);
+            SetType = S[e->to];
+            for (i = 0; i != vec_num; ++i) {
+                if (S[i] == SetType)
+                    S[i] = S[e->from];
+            }
         }
-        printf("%d\n", ml->vec);
+        free(e);
     }
+    Heap_delete(heap);
+    return res;
 }
+
 \end{lstlisting}
 \end{document} 
