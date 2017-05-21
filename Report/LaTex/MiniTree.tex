@@ -84,7 +84,7 @@
 
 \part*{摘要}
 生活中的许许多多看似不同的问题在本质上却是相同的，我们往往会遇到求整体最短、最近、最省钱的问题...这个时候，通过对图论问题的研究，我们就可以对这些问题做出解答，此报告主要回答关于图论中最小生成树的问题。
-\\ \paragraph{关键词：}$Prim$\ \ $Kruskal$\ \ 最小生成树
+paragraph{关键词：}$Prim$\ \ $Kruskal$\ \ 最小生成树
 \tableofcontents
 
 \newpage
@@ -156,7 +156,7 @@
 \section{代码实现}
 \subsection{设计数据结构}
 参照了耶鲁大学的一位前辈的代码，动态分配数组，长度可以扩展，既不浪费空间，又不会带来性能损失。
-数据结构如下\ref{数据结构如下}：
+数据结构如下：
 
 \includegraphics[width=0.9\textwidth]{../Pics/DataStruct.eps}
 
@@ -194,9 +194,9 @@ typedef struct w_graph *WGraph;//图是一个指针类型的
 \paragraph{获取边的权}通过该点度的大小来确定是否需要对邻接列表排序，数据量少的时候进行遍历，而后返回权值。
 \paragraph{提供读取顶点数据的接口}接受函数指针$Func$和所需数据指针，内部对邻接列表里的每个顶点施加$Func$操作（将原点，邻接点和权都传给该函数以供操作）。
 
-\subsection{实现最小生成树算法\ref{最小生成树实现}}
+\subsection{实现最小生成树算法}
 \begin{itemize}
-\item $Prim$算法实现
+\item $Prim$算法实现(伪代码)
 \begin{codebox}
 \Procname{$\proc{Prim Algorithm}(G,v_0)$}
 \li $v_{new} = v_0,G_{new}(V_{new},E_{new},W_{new})$
@@ -206,7 +206,7 @@ typedef struct w_graph *WGraph;//图是一个指针类型的
 \li     $Set\ v \in V_{new}$,\ $Set\ <u,v>\in E_{new}$,\ $Set\ W(u,v)\in W_{new}$
     \End
 \end{codebox}
-\item $Kruskal$算法实现（实际代码中使用了堆）
+\item $Kruskal$算法实现（伪代码）
 堆的实现在Github上，此处不再赘述。
 \begin{codebox}
 \Procname{$\proc{Prim Algorithm}(G)$}
@@ -252,16 +252,63 @@ typedef struct w_graph *WGraph;//图是一个指针类型的
 \appendix
 \part{附录}
 \section{带权图实现}
-\label{数据结构如下}
 \begin{lstlisting}[language={C}]
 //
+// WeightGraph.h
+// Created by Along on 2017/5/13.
+//
+
+#ifndef GRAPH_WEIGHTGRAPH_H
+#define GRAPH_WEIGHTGRAPH_H
+
+// 不可达时的返回值
+#define INFINITY (65535)
+
+// 图的定义
+typedef struct w_graph *WGraph;
+
+// 创建一个图
+WGraph w_graph_create(int n);
+
+// 删除一个图
+void w_graph_destroy(WGraph);
+
+// 添加一条边
+void w_graph_add_edge(WGraph, int source, int sink, int weight);
+
+// 顶点的数目
+int w_graph_vector_count(WGraph);
+
+// 边的数目
+int w_graph_edge_count(WGraph);
+
+// 顶点的度
+int w_graph_out_degree(WGraph, int source);
+
+// 两个顶点是否邻接
+int w_graph_has_edge(WGraph, int source, int sink);
+
+// 边的权
+int w_graph_weight_edge(WGraph, int source, int sink);
+
+// 提供遍历数据的接口
+void w_graph_foreach(WGraph g, int source,
+    void (*f)(WGraph, int src, int sink, int weight, void *),
+    void *data);
+
+#endif //GRAPH_WEIGHTGRAPH_H
+\end{lstlisting}
+\begin{lstlisting}[language={C}]
+//
+// WeightGraph.c
+// 图的封装
 // Created by Along on 2017/5/13.
 // https://github.com/AlongWY/Graph
 //
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-
 #include "WeightGraph.h"
 
 //基础带权图定义
@@ -371,9 +418,6 @@ static int list_cmp(const void *a, const void *b) {
     vec - ((const link_list *) b)->vec;
 }
 
-
-#include <stdio.h>
-
 //二者之间有边则返回1
 int w_graph_has_edge(WGraph g, int source, int sink) {
     int i;
@@ -467,9 +511,39 @@ void (*f)(WGraph, int, int, int, void *), void *data) {
 }
 \end{lstlisting}
 \section{最小生成树}
-\label{最小生成树实现}
 \begin{lstlisting}[language={C}]
 //
+// Graph_tools.h
+// Created by Along on 2017/5/13.
+//
+
+#ifndef GRAPH_GRAPH_TOOLS_H
+#define GRAPH_GRAPH_TOOLS_H
+
+#include "WeightGraph.h"
+
+// tools
+// 将图打印出来
+void w_graph_show(WGraph);
+
+// 将图成Graphviz的格式输出文件以便于生成图片
+void w_graph_show_dot(WGraph, char path[]);
+
+// 封装：由于是无权图， 一次添加二条边
+void w_graph_add_edge2(WGraph, int source, int sink, int weight);
+
+// 求最小生成树
+// Prim算法
+WGraph Prim(WGraph, int start);
+
+// Kruskal算法(其中用到了堆)
+WGraph Kruskal(WGraph);
+
+#endif //GRAPH_GRAPH_TOOLS_H
+\end{lstlisting}
+\begin{lstlisting}[language={C}]
+//
+// Graph_tools.c
 // Created by Along on 2017/5/13.
 // https://github.com/AlongWY/Graph
 //
@@ -510,7 +584,7 @@ WGraph Prim(WGraph g, int start) {
     assert(start < vec_num);
 
     struct need_data Data;
-    Data.S = calloc((size_t) vec_num, sizeof(int));     //逐步增加的新顶点集
+    Data.S = calloc((size_t) vec_num, sizeof(int));//逐步增加的新顶点集
     Data.Len = calloc((size_t) vec_num, sizeof(int));   //到树的最小边
     Data.near = calloc((size_t) vec_num, sizeof(int));  //最近临接顶点
     for (i = 0; i != vec_num; ++i)
@@ -538,19 +612,21 @@ WGraph Prim(WGraph g, int start) {
     return res;
 }
 
-
+// 存入堆的数据类型
 typedef struct _Edge {
     int from;
     int to;
     int len;
 } Edge;
 
+// 比较边的大小
 int edge_cmp(const void *a, const void *b) {
     return ((Edge *) a)->len - ((Edge *) b)->len;
 }
 
-
-static void insertEdge(WGraph g, int src, int sink, int weight, void *heap) {
+// 初始时将各边插入堆中
+static void insertEdge(WGraph g, int src, int sink, 
+                            int weight, void *heap) {
     assert(g);
     Edge *edge = malloc(sizeof(Edge));
     edge->from = src;
@@ -574,7 +650,8 @@ WGraph Kruskal(WGraph g) {
     }
     Edge *e = NULL;
 
-    while (w_graph_vector_count(res) != (w_graph_edge_count(res) / 2 + 1)) {
+    while (w_graph_vector_count(res) != (w_graph_edge_count(res) / 2 + 1))
+    {
         e = Heap_delete_key(heap, edge_cmp);
         //如果加入这条边不会形成圈
         if (S[e->from] != S[e->to]) {
@@ -592,5 +669,128 @@ WGraph Kruskal(WGraph g) {
     return res;
 }
 
+\end{lstlisting}
+
+\section{堆的实现}
+\begin{lstlisting}[language={C}]
+//
+// Binaryheap.h
+// 堆的简单实现
+// Created by Along on 2017/5/14.
+//
+
+#ifndef GRAPH_BINARYHEAP_H
+#define GRAPH_BINARYHEAP_H
+
+// 堆的定义
+typedef struct BinaryHeap *BinaryHeap;
+
+// 创建一个堆
+BinaryHeap Heap_create(size_t n);
+
+// 堆的数据量
+int Heap_size(BinaryHeap);
+
+// 插入数据
+void Heap_insert(BinaryHeap, void *key, 
+                int (*cmp)(const void *a, const void *b));
+
+// 删除并取出堆顶元素
+void *Heap_delete_key(BinaryHeap, 
+                int (*cmp)(const void *a, const void *b));
+
+// 删除堆
+void Heap_delete(BinaryHeap);
+
+#endif //GRAPH_BINARYHEAP_H
+\end{lstlisting}
+
+\begin{lstlisting}[language={C}]
+//
+// Binaryheap.c
+// Created by Along on 2017/5/14.
+//
+
+#include <stddef.h>
+#include <malloc.h>
+#include <assert.h>
+#include "Binaryheap.h"
+
+// 堆的数据结构
+struct BinaryHeap {
+    int n;
+    int len;
+    void *data[1];
+};
+
+// 创建堆
+BinaryHeap Heap_create(size_t n) {
+    BinaryHeap h = malloc(n * sizeof(BinaryHeap) +
+                         sizeof(void *) * (n - 1));
+    assert(h);
+    h->n = 0;
+    h->len = (int) n;
+    return h;
+}
+
+//插入数据
+void Heap_insert(BinaryHeap h, void *key, int (*cmp)
+                                (const void *, const void *)) {
+    assert(key);
+    //动态扩展堆大小
+    if (h->n >= h->len) {
+        h->len *= 2;
+        h = realloc(h, sizeof(BinaryHeap) + sizeof(void *) * (h->len - 1));
+    }
+
+    //上滤
+    int hole = ++h->n;
+    void *copy = key;
+
+    h->data[0] = copy;
+    for (; cmp(key, h->data[hole / 2]) < 0; hole /= 2) {
+        h->data[hole] = h->data[hole / 2];
+    }
+    h->data[hole] = h->data[0];
+    h->data[0] = NULL;
+}
+
+// 元素上滤，保证堆的平衡
+static void percolateDown(BinaryHeap h, int hole, 
+        int (*cmp)(const void *, const void *)) {
+    int child;
+    void *tmp = h->data[hole];
+    for (; hole * 2 <= h->n; hole = child) {
+        child = hole * 2;
+        if (child != h->n && cmp(h->data[child + 1], h->data[child]) < 0)
+            ++child;
+        if (cmp(h->data[child], tmp) < 0)
+            h->data[hole] = h->data[child];
+        else
+            break;
+    }
+    h->data[hole] = tmp;
+}
+
+// // 删除并取出堆顶元素
+void *Heap_delete_key(BinaryHeap h, int (*cmp)
+                        (const void *, const void *)) {
+    assert(h->n > 0);
+    void *res = h->data[1];
+
+    h->data[1] = h->data[h->n--];
+    percolateDown(h, 1, cmp);
+    return res;
+}
+
+// 堆的数据量
+int Heap_size(BinaryHeap h) {
+    return h->n;
+}
+
+// 删除堆
+void Heap_delete(BinaryHeap h) {
+    free(h);
+}
 \end{lstlisting}
 \end{document} 
