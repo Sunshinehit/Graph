@@ -84,7 +84,7 @@
 
 \part*{摘要}
 生活中的许许多多看似不同的问题在本质上却是相同的，我们往往会遇到求整体最短、最近、最省钱的问题...这个时候，通过对图论问题的研究，我们就可以对这些问题做出解答，此报告主要回答关于图论中最小生成树的问题。
-paragraph{关键词：}$Prim$\ \ $Kruskal$\ \ 最小生成树
+\paragraph{关键词：}$Prim$\ \ $Kruskal$\ \ 最小生成树
 \tableofcontents
 
 \newpage
@@ -207,9 +207,8 @@ typedef struct w_graph *WGraph;//图是一个指针类型的
     \End
 \end{codebox}
 \item $Kruskal$算法实现（伪代码）
-堆的实现在Github上，此处不再赘述。
 \begin{codebox}
-\Procname{$\proc{Prim Algorithm}(G)$}
+\Procname{$\proc{Kruskal Algorithm}(G)$}
 \li $G_{new}(V_{new},E_{new},W_{new}),V_{new}=V$
 \li $Sort\ W$
 \li $Set \  v_0 \in S$
@@ -625,7 +624,7 @@ int edge_cmp(const void *a, const void *b) {
 }
 
 // 初始时将各边插入堆中
-static void insertEdge(WGraph g, int src, int sink, 
+static void insertEdge(WGraph g, int src, int sink,
                             int weight, void *heap) {
     assert(g);
     Edge *edge = malloc(sizeof(Edge));
@@ -692,11 +691,11 @@ BinaryHeap Heap_create(size_t n);
 int Heap_size(BinaryHeap);
 
 // 插入数据
-void Heap_insert(BinaryHeap, void *key, 
+void Heap_insert(BinaryHeap, void *key,
                 int (*cmp)(const void *a, const void *b));
 
 // 删除并取出堆顶元素
-void *Heap_delete_key(BinaryHeap, 
+void *Heap_delete_key(BinaryHeap,
                 int (*cmp)(const void *a, const void *b));
 
 // 删除堆
@@ -756,7 +755,7 @@ void Heap_insert(BinaryHeap h, void *key, int (*cmp)
 }
 
 // 元素上滤，保证堆的平衡
-static void percolateDown(BinaryHeap h, int hole, 
+static void percolateDown(BinaryHeap h, int hole,
         int (*cmp)(const void *, const void *)) {
     int child;
     void *tmp = h->data[hole];
